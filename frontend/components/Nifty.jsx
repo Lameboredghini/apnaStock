@@ -1,19 +1,40 @@
 import React, { useEffect, useState } from "react";
 // import styles from '@/styles/Nifty.module.css'
-// import axios from "axios";
+import axios from "axios";
 
 function Nifty() {
     const [data,setData]=useState([])
+    async function FetchData(stockName){
+        let url="https://stock-data-api.oxoutsidethebox.repl.co/stocks/"
+        if (stockName=="BSE" || stockName=="NSE"){
+            url="https://stock-data-api.oxoutsidethebox.repl.co/index/"
+        }
+        let response=await axios.get(`${url}${stockName}`)
+        setData(response.data.data)
+        //    setData({"data":response.data});
+      }
+    useEffect(() => {
+            console.log("Hello")
+            FetchData("BSE");
+        }
+     , []);
     // useEffect(() => {
     //     axios.get('http://127.0.0.1:8000/index/BSE').then((response) => {
     //         setData(response.data.data)
     //     });
     //  }, []);
+    const handleChange= async (e)=>{
+        // console.log(e.target.value)
+        FetchData(e.target.value);
+        // console.log(data);
+    }
     return (
         <>
-        <select id ='nifty' name = 'nifty' className="border-2 p-2 border-black rounded-lg font-bold mt-5 ml-5">
-            <option value='NSE' className="font-bold">NSE</option>
-            <option value='BSE font-bold'>BSE</option>
+        <select id ='selectedStock' defaultValue="BSE" name = 'selectedStock' className="border-2 p-2 border-black rounded-lg font-bold mt-5 ml-5" onChange={(e)=>{handleChange(e)}}>
+            <option  value='NSE'>NSE</option>
+            <option value='BSE'>BSE</option>
+            <option value='Eicher'>Eicher</option>
+            <option value='AshokLeyland'>Ashok Leyland</option>
         </select>
         <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-600"></hr>
             <div>
@@ -44,7 +65,7 @@ function Nifty() {
                         </div>
                     </div>
                     <div></div>
-                    <div>
+                    {/* <div>
                         {
                             data.map((item)=>{
                                 return(
@@ -54,7 +75,7 @@ function Nifty() {
                                 )
                             })
                         }
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </>
